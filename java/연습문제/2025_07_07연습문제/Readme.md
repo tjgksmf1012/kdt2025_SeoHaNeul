@@ -26,7 +26,6 @@ public class StudentExample {
     public static void main(String[] args) throws Exception {
         List<Student> students = new ArrayList<>();
 
-        // 파일에 학생 정보 저장
         String[] lines = {
             "100, 홍길동,90,77,88",
             "101, 이순신,88,94,90",
@@ -40,7 +39,6 @@ public class StudentExample {
             }
         }
 
-        // 파일에서 정보 읽어오기
         try (BufferedReader reader = new BufferedReader(new FileReader("C:\\Temp\\student.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -55,7 +53,6 @@ public class StudentExample {
             }
         }
 
-        // 최고 평균과 국어 평균 계산
         double totalKor = 0;
         Student topStudent = null;
         double highestAvg = 0;
@@ -79,6 +76,7 @@ public class StudentExample {
         System.out.println("국어 점수 전체 평균: " + String.format("%.2f", korAvg));
     }
 }
+
 ```
 
 ```
