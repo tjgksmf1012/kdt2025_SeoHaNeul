@@ -12,13 +12,14 @@ public class SeoulPeopleExam {
         br.readLine();
         while ((line = br.readLine()) != null) {
             String[] t = line.split(",");
-            String atdrc_nm = t[0].trim();
-            int tot_popltn_co = Integer.parseInt(t[1].trim());
-            int tot_hshld_co = Integer.parseInt(t[2].trim());
-            int male_popltn_co = Integer.parseInt(t[3].trim());
-            int female_popltn_co = Integer.parseInt(t[4].trim());
+            if (t.length < 8) continue;
+            String atdrc_code_se = t[0].trim();
+            String atdrc_nm = t[1].trim();
+            int tot_popltn_co = Integer.parseInt(t[3].trim());
+            int tot_hshld_co = Integer.parseInt(t[4].trim());
             double hshld_popltn_avrg_co = Double.parseDouble(t[5].trim());
-            String atdrc_code_se = t[6].trim();
+            int male_popltn_co = Integer.parseInt(t[6].trim());
+            int female_popltn_co = Integer.parseInt(t[7].trim());
             peoples.add(new People(atdrc_nm, tot_popltn_co, tot_hshld_co, male_popltn_co, female_popltn_co, hshld_popltn_avrg_co, atdrc_code_se));
         }
         br.close();
@@ -52,12 +53,12 @@ class People {
     String atdrc_code_se;
 
     People(String atdrc_nm, int tot_popltn_co, int tot_hshld_co, int male_popltn_co, int female_popltn_co, double hshld_popltn_avrg_co, String atdrc_code_se) {
+        this.atdrc_code_se = atdrc_code_se;
         this.atdrc_nm = atdrc_nm;
         this.tot_popltn_co = tot_popltn_co;
         this.tot_hshld_co = tot_hshld_co;
         this.male_popltn_co = male_popltn_co;
         this.female_popltn_co = female_popltn_co;
         this.hshld_popltn_avrg_co = hshld_popltn_avrg_co;
-        this.atdrc_code_se = atdrc_code_se;
     }
 }
