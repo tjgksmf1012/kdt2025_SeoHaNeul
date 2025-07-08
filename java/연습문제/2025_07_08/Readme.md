@@ -137,10 +137,7 @@ public class SeoulPeopleExam {
     ArrayList<People> peoples = new ArrayList<>();
 
     public SeoulPeopleExam() throws Exception {
-BufferedReader br = new BufferedReader(
-    new InputStreamReader(
-        new FileInputStream("C:\\Users\\cyci\\Documents\\seoul_people.csv"), "UTF-8")
-);
+        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\cyci\\Documents\\seoul_people.csv"));
         String line;
         br.readLine();
         while ((line = br.readLine()) != null) {
