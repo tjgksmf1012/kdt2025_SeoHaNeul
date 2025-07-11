@@ -4,7 +4,6 @@ package javadb.sec02;
 import java.sql.*;
 import java.util.*;
 
-// DTO 클래스
 class Dept {
     private int deptno;
     private String deptname;
@@ -30,7 +29,6 @@ class Dept {
     }
 }
 
-// DAO 클래스
 class DeptDAO {
     private Connection connect() throws Exception {
         String url = "jdbc:mysql://localhost/school_db?serverTimezone=Asia/Seoul";
@@ -95,7 +93,6 @@ class DeptDAO {
     }
 }
 
-// Main 클래스
 public class DeptDemoDAO {
     static Scanner sc = new Scanner(System.in);
     static DeptDAO dao = new DeptDAO();
