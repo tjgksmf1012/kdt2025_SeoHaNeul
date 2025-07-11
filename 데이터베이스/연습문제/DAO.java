@@ -19,17 +19,22 @@ class Dept {
     public String getDeptname() { return deptname; }
     public String getLoc() { return loc; }
 
-    public void setDeptno(int deptno) { this.deptno = deptno; }
-    public void setDeptname(String deptname) { this.deptname = deptname; }
     public void setLoc(String loc) { this.loc = loc; }
 
     @Override
     public String toString() {
-        return String.format("학과번호: %d, 학과명: %s, 호실: %s", deptno, deptname, loc);
+        return String.format("학과번호: %d, 이름: %s, 호실: %s", deptno, deptname, loc);
     }
 }
 
-class DeptDAO {
+interface DeptDAO {
+    List<Dept> getAll();
+    boolean insert(Dept dept);
+    boolean update(Dept dept);
+    boolean delete(int deptno);
+}
+
+class DeptDAOImpl implements DeptDAO {
     private Connection connect() throws Exception {
         String url = "jdbc:mysql://localhost/school_db?serverTimezone=Asia/Seoul";
         String user = "root";
@@ -38,14 +43,15 @@ class DeptDAO {
         return DriverManager.getConnection(url, user, pass);
     }
 
+    @Override
     public List<Dept> getAll() {
         List<Dept> list = new ArrayList<>();
-        String sql = "SELECT * FROM dept";
         try (Connection con = connect();
-             PreparedStatement ps = con.prepareStatement(sql);
+             PreparedStatement ps = con.prepareStatement("SELECT * FROM dept");
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                list.add(new Dept(rs.getInt("deptno"), rs.getString("deptname"), rs.getString("loc")));
+                Dept d = new Dept(rs.getInt("deptno"), rs.getString("deptname"), rs.getString("loc"));
+                list.add(d);
             }
         } catch (Exception e) {
             System.out.println("조회 실패: " + e.getMessage());
@@ -53,8 +59,9 @@ class DeptDAO {
         return list;
     }
 
+    @Override
     public boolean insert(Dept dept) {
-        String sql = "INSERT INTO dept (deptno, deptname, loc) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO dept(deptno, deptname, loc) VALUES (?, ?, ?)";
         try (Connection con = connect();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, dept.getDeptno());
@@ -67,6 +74,7 @@ class DeptDAO {
         }
     }
 
+    @Override
     public boolean update(Dept dept) {
         String sql = "UPDATE dept SET loc = ? WHERE deptno = ?";
         try (Connection con = connect();
@@ -80,6 +88,7 @@ class DeptDAO {
         }
     }
 
+    @Override
     public boolean delete(int deptno) {
         String sql = "DELETE FROM dept WHERE deptno = ?";
         try (Connection con = connect();
@@ -93,66 +102,69 @@ class DeptDAO {
     }
 }
 
-public class DeptDemoDAO {
+public class DeptApp {
     static Scanner sc = new Scanner(System.in);
-    static DeptDAO dao = new DeptDAO();
+    static DeptDAO dao = new DeptDAOImpl();
 
     public static void main(String[] args) {
         while (true) {
-            System.out.println("\n1. 전체 조회 | 2. 추가 | 3. 삭제 | 4. 호실 수정 | 0. 종료");
-            System.out.print("메뉴 선택: ");
-            int menu = Integer.parseInt(sc.nextLine());
+            System.out.println("\n--- 학과 정보 관리 시스템 ---");
+            System.out.println("1. 모든 학과 보기");
+            System.out.println("2. 학과 추가");
+            System.out.println("3. 학과 삭제");
+            System.out.println("4. 호실 수정");
+            System.out.println("0. 종료");
+            System.out.print("선택 >> ");
+            int menu = sc.nextInt(); sc.nextLine();
 
             switch (menu) {
-                case 1 -> list();
-                case 2 -> insert();
-                case 3 -> delete();
-                case 4 -> update();
-                case 0 -> {
-                    System.out.println("종료합니다.");
-                    return;
-                }
-                default -> System.out.println("잘못된 선택입니다.");
+                case 1: showAll(); break;
+                case 2: insert(); break;
+                case 3: delete(); break;
+                case 4: update(); break;
+                case 0: System.out.println("종료합니다."); return;
+                default: System.out.println("잘못된 입력입니다.");
             }
         }
     }
 
-    static void list() {
+    static void showAll() {
         List<Dept> list = dao.getAll();
         if (list.isEmpty()) {
-            System.out.println("학과 정보가 없습니다.");
+            System.out.println("등록된 학과가 없습니다.");
         } else {
             list.forEach(System.out::println);
         }
     }
 
     static void insert() {
-        System.out.print("학과번호: "); int no = Integer.parseInt(sc.nextLine());
-        System.out.print("학과명: "); String name = sc.nextLine();
-        System.out.print("호실: "); String loc = sc.nextLine();
-        if (dao.insert(new Dept(no, name, loc))) {
-            System.out.println("학과가 추가되었습니다.");
-        }
+        System.out.print("학과 번호: ");
+        int no = sc.nextInt(); sc.nextLine();
+        System.out.print("학과명: ");
+        String name = sc.nextLine();
+        System.out.print("호실: ");
+        String loc = sc.nextLine();
+        Dept dept = new Dept(no, name, loc);
+        if (dao.insert(dept)) System.out.println("학과 추가 성공");
+        else System.out.println("학과 추가 실패");
     }
 
     static void delete() {
-        System.out.print("삭제할 학과번호: ");
-        int no = Integer.parseInt(sc.nextLine());
-        if (dao.delete(no)) {
-            System.out.println("삭제 완료!");
-        } else {
-            System.out.println("해당 학과가 존재하지 않습니다.");
-        }
+        System.out.print("삭제할 학과 번호: ");
+        int no = sc.nextInt(); sc.nextLine();
+        if (dao.delete(no)) System.out.println("삭제 성공");
+        else System.out.println("삭제 실패");
     }
 
     static void update() {
-        System.out.print("수정할 학과번호: ");
-        int no = Integer.parseInt(sc.nextLine());
+        System.out.print("수정할 학과 번호: ");
+        int no = sc.nextInt(); sc.nextLine();
         System.out.print("새 호실: ");
         String loc = sc.nextLine();
-        if (dao.update(new Dept(no, null, loc))) {
-            System.out.println("호실 수정 완료!");
-        }
+        Dept dept = new Dept(no, "", loc);
+        if (dao.update(dept)) System.out.println("수정 성공");
+        else System.out.println("수정 실패");
     }
 }
+
 ```
