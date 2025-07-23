@@ -21,7 +21,7 @@ D. Shipping(shipname, date, voyageID, port)
 ```
 A. partnumber → description, supplier → suppaddress, (partnumber, supplier) → price
 
-B. 1NF만 만족 (부분 함수 종속성 있으므로 2NF 아님)
+B. 1NF만 만족한다 (부분 함수 종속성 때문에 2NF는 불만족)
 
 C. R1: 1NF, R2: BCNF
 
