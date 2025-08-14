@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h3>프런트엔드 개발자 지원서</h3><br>
+    HTML, CSS, 자바스크립트의 기술을 이해하고 실무 경험이 있는 분을 찾습니다.
+    <hr>
+    <legend>개인 정보</legend>
+
+    <ul>
+        <li style="list-style:none;"><label for="name">이름</label>
+        <input type="text" id="name" name="name"
+            placeholder="공백 없이 입력하세요." required><br>
+        </li>
+        <li style="list-style:none;"><label for="phone">연락처</label>
+        <input type="tel" id="phone" name="phone"
+            placeholder="010-1234-5678"
+            pattern="^0\d{1,2}-\d{3,4}-\d{4}$" required>
+        </li>
+    </ul>
+
+    <legend>지원 분야</legend>
+    <ul>
+        <li style="list-style:none;">
+            <label for="field1"><input type="radio" id="field1" name="field" value="publishing" required> 웹 퍼블리싱</label><br>
+        </li>
+        <li style="list-style:none;">
+            <label for="field2"><input type="radio" id="field2" name="field" value="webapp"> 웹 애플리케이션 개발</label><br>
+        </li>
+        <li style="list-style:none;">
+            <label for="field3"><input type="radio" id="field3" name="field" value="env"> 개발 환경 개선</label>
+        </li>
+    </ul><br>
+
+    <legend>지원 동기</legend><br>
+    <textarea id="motivation" name="motivation"
+            rows="5" cols="60"
+            placeholder="본사 지원 동기를 간략히 써 주세요."></textarea>
+    <div>
+    <button type="submit">접수하기</button>
+    <button type="reset">다시 쓰기</button>
+    </div>
+</body>
+</html>
+
+    
+    
